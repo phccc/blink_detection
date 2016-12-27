@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 
 def face_loacte(faces):
-    "locate the one true faces"
+    """ locate the one true faces """
     true_face = []
     max_width = 0;
     for (x,y,w,h) in faces:
@@ -15,7 +15,7 @@ def face_loacte(faces):
     return true_face
 
 def eye_locate(eyes):
-    "locate the one true faces"
+    """ locate the one true faces """
     find = False
     true_eye = []
     for ii in range(len(eyes)):
@@ -49,6 +49,12 @@ def eye_locate(eyes):
             break
     return true_eye
 
-
-
-
+def count_black(region, thresh):
+    rows = len(region)
+    cols = len(region[0])
+    count = 0
+    for ii in range(rows):
+        for jj in range(cols):
+            if region[ii][jj] < thresh:
+                count = count + 1
+    return count

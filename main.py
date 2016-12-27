@@ -1,16 +1,26 @@
 import numpy as np
 import cv2
-from eyeDetect import *
+import matplotlib.pyplot as plt
+from eyeDetect import face_loacte, eye_locate, count_black
+from plot_fig import update_line
 
 face_cascade = cv2.CascadeClassifier('./classifier/haarcascade_frontalface_default.xml')
 eye_cascade = cv2.CascadeClassifier('./classifier/haarcascade_eye_tree_eyeglasses.xml')
 
-cap = cv2.VideoCapture('./data/7.mov')
+cap = cv2.VideoCapture('./data/3.mov')
 
 face_location = []
 eye_location = []
 
-print "Hey"
+plot_width = 31
+plt.axis([0, plot_width, 0, 700])
+plt.suptitle('Real-time Eye blink tracking', fontsize=12)
+plt.xlabel('Time')
+plt.ylabel('Transformed Value')
+plt.ion()
+
+hl, = plt.plot([],[])
+i = 0
 
 
 while(cap.isOpened()):
@@ -53,8 +63,29 @@ while(cap.isOpened()):
     e2_y = eye_location[1][1]
     e2_w = eye_location[1][2]
     e2_h = eye_location[1][3]
+    """
+    e1_x = e1_x + e1_w/6
+    e1_y = e1_y + e1_h/4
+    e1_w = int(e1_w/1.5)
+    e1_h = e1_h/2
+    e2_x = e2_x + e2_w/6
+    e2_y = e2_y + e2_h/4
+    e2_w = int(e2_w/1.5)
+    e2_h = e2_h/2
+    """
+
     cv2.rectangle(roi_color,(e1_x,e1_y),(e1_x+e1_w,e1_y+e1_h),(0,255,0),2)
     cv2.rectangle(roi_color,(e2_x,e2_y),(e2_x+e2_w,e2_y+e2_h),(0,255,0),2)
+
+    eye_region1 = roi_gray[e1_y:e1_y+e1_h, e1_x:e1_x+e1_w]
+    eye_region2 = roi_gray[e2_y:e2_y+e2_h, e2_x:e2_x+e2_w]
+    count1 = count_black(eye_region1, 20)
+    count2 = count_black(eye_region2, 20)
+    count = count1 + count2
+    update_line(hl, plot_width, i, count)
+    plt.draw()
+    plt.pause(0.0001)
+    i = i + 1
 
     cv2.imshow('frame',img)
     if cv2.waitKey(1) & 0xFF == ord('q'):
