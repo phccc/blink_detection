@@ -49,12 +49,8 @@ def eye_locate(eyes):
             break
     return true_eye
 
-def count_black(region, thresh):
-    rows = len(region)
-    cols = len(region[0])
-    count = 0
-    for ii in range(rows):
-        for jj in range(cols):
-            if region[ii][jj] < thresh:
-                count = count + 1
+def count_black_ratio(region, thresh):
+    thresh_map = region < thresh
+    count = np.sum(thresh_map)
+    #total = region.shape[0]*region.shape[1]*1.0
     return count
