@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import gen_keystroke as key
+import setting as st
 
 
 def update_line(hl, axes, limit, x, y):
@@ -14,14 +16,35 @@ def update_line(hl, axes, limit, x, y):
         hl.set_ydata(y_temp)
         axes.set_ylim([0,np.max(hl.get_ydata())])
 
-"""
-plt.axis([0, 10, 0, 1])
-plt.ion()
-hl, = plt.plot([],[])
+def detect_blink(edata):
 
-for i in range(30):
-    y = np.random.random()
-    update_line(hl, 11, i, y)
-    plt.draw()
-    #plt.pause(0.05)
-"""
+    if (st.eyeState==2): # case for Eye Closed
+        if(edata > st.prev_edata):
+            st.eyeState = 0
+            key.Stroke()
+    elif (st.eyeState==1): # case for edata dropping
+        if(edata < st.prev_edata):
+            if(edata < st.max_edata*st.thresh_percent):
+                st.eyeState = 2
+        else:
+            st.eyeState = 0
+    elif(st.eyeState==0): # case for waiting for edata dropping
+        if(edata < st.prev_edata):
+            st.eyeState = 1
+            st.max_edata = edata
+    st.prev_edata = edata
+
+
+
+
+
+if __name__ == "__main__":
+    plt.axis([0, 10, 0, 1])
+    plt.ion()
+    hl, = plt.plot([],[])
+
+    for i in range(30):
+        y = np.random.random()
+        update_line(hl, 11, i, y)
+        plt.draw()
+        #plt.pause(0.05)

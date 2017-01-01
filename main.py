@@ -1,15 +1,17 @@
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
-from eyeDetect import face_loacte, eye_locate, count_black_ratio
-from plot_fig import update_line
 import skin_extract as skin
+from eyeDetect import face_loacte, eye_locate, count_black_ratio
+from plot_fig import update_line, detect_blink
+import setting
 
 face_cascade = cv2.CascadeClassifier('./classifier/haarcascade_frontalface_default.xml')
 eye_cascade = cv2.CascadeClassifier('./classifier/haarcascade_eye_tree_eyeglasses.xml')
+setting.init()
 
 # limit window size
-window_width = 600
+window_width = 350
 
 # capture input video
 #cap = cv2.VideoCapture('./data/0.mov') # capture from file
@@ -41,13 +43,13 @@ s_mem = np.zeros(M)
 
 # main processing loop here
 while(cap.isOpened()):
+    
     # capture the input image
     ret, img = cap.read()
     width = img.shape[1]
     if width > window_width:
         resize_factor = window_width*1.0 / width
         img = cv2.resize(img, (0,0),fx=resize_factor,fy=resize_factor)
-
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     # find the face location
@@ -105,6 +107,7 @@ while(cap.isOpened()):
 
     # Draw the Results
     update_line(hl, axes, plot_width, i, T_value)
+    detect_blink(T_value)
     plt.pause(0.0001)
     i = i + 1
 
@@ -117,8 +120,8 @@ while(cap.isOpened()):
         cv2.rectangle(roi_color,(e1_x,e1_y),(e1_x+e1_w,e1_y+e1_h),(0,255,0),2)
         cv2.rectangle(roi_color,(e2_x,e2_y),(e2_x+e2_w,e2_y+e2_h),(0,255,0),2)
 
-    cv2.imshow('eye1',cv2.resize(eye1_gray, (250, 250)))
-    cv2.imshow('eye2',cv2.resize(eye2_gray, (250, 250)))
+    #cv2.imshow('eye1',cv2.resize(eye1_gray, (250, 250)))
+    #cv2.imshow('eye2',cv2.resize(eye2_gray, (250, 250)))
     cv2.imshow('frame',img)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
