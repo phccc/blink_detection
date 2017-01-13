@@ -17,12 +17,17 @@ KEYEVENTF_SCANCODE    = 0x0008
 
 MAPVK_VK_TO_VSC = 0
 
+
+
 # msdn.microsoft.com/en-us/library/dd375731
 VK_TAB  = 0x09
 VK_MENU = 0x12
 VK_SPACE = 0x20
 VK_LWIN = 0x5B
 VK_UP = 0x26
+VK_F4  = 0x73
+VK_LEFT= 0X25
+VK_RIGHT=0x27
 
 # C struct definitions
 
@@ -101,8 +106,9 @@ def AltTab():
     ReleaseKey(VK_MENU) # Alt~
 
 def Stroke():
-    PressKey(VK_LWIN) # Space
+    PressKey(VK_LWIN)
     ReleaseKey(VK_LWIN)
 
+    
 if __name__ == "__main__":
     Stroke()

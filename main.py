@@ -46,6 +46,8 @@ while(cap.isOpened()):
     
     # capture the input image
     ret, img = cap.read()
+
+    
     width = img.shape[1]
     if width > window_width:
         resize_factor = window_width*1.0 / width
@@ -122,6 +124,7 @@ while(cap.isOpened()):
 
     #cv2.imshow('eye1',cv2.resize(eye1_gray, (250, 250)))
     #cv2.imshow('eye2',cv2.resize(eye2_gray, (250, 250)))
+
     cv2.imshow('frame',img)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break

@@ -36,8 +36,6 @@ def detect_blink(edata):
 
 
 
-
-
 if __name__ == "__main__":
     plt.axis([0, 10, 0, 1])
     plt.ion()

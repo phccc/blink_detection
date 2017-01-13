@@ -9,3 +9,4 @@ def init():
     prev_edata = 0
     max_edata = 0
     thresh_percent = 0.5
+    
